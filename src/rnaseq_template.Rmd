@@ -1,0 +1,88 @@
+---
+title: "QC Report"
+author: '`r params$author`'
+date: '`r strftime(Sys.time(), format = "%B %d, %Y")`'
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    self_contained: false
+    mathjax: local
+params:
+  study_name:
+    value: x
+  author:
+    value: x
+  study1:
+    value: x
+  study2:
+    value: x
+---
+
+# Overview
+
+This report performs a simple data QC process on the clinical study `r params$study1` and `r params$study2`.  The datasets consist of ADaM variables for the study.
+
+# Methods
+
+The data set consits of clincial dna genomics data. The genomics downstream analysis has Gene expression which was quantified with Kallisto against the hg38 and the Gencode 33 gene annotations and transcripts.  
+
+```{r setup, echo=FALSE}
+show_text <- TRUE
+```
+
+# Samples Overview
+
+The table below shows the samples which were sequenced.
+```{r samplesoverview, echo=FALSE}
+sdata <- read.csv("test.csv", header = TRUE, sep = ",") 
+print(sdata)
+```
+
+
+# Metadata For QC Report
+
+```{r echo=FALSE, eval=show_text}
+mdata <- read.csv("metadata.txt", header = TRUE, sep = "\t") 
+print(mdata)
+```
+
+```{r echo=FALSE, eval=show_text}
+library(validate)
+mdata <- read.csv("metadata.txt", header = TRUE, sep = "\t") 
+check_subj <- is_unique(mdata$subject_id)
+print("check for unique in subject id")
+print(check_subj)
+```
+
+
+```{r echo=FALSE, eval=show_text}
+library(validate)
+mdata <- read.csv("metadata.txt", header = TRUE, sep = "\t") 
+rules <- validator(
+    is.character(arm),
+    is.numeric(age),
+    is.numeric(subject_id),
+    is.character(sex)
+)
+out <- confront(mdata, rules)
+
+print("check for variable types")
+summary(out)
+```
+
+```{r echo=FALSE, eval=show_text}
+library(validate)
+mdata <- read.csv("metadata.txt", header = TRUE, sep = "\t") 
+rules <- validator(
+    !is.na(arm),
+    !is.na(age),
+    !is.na(subject_id),
+    !is.na(sex)
+)
+out <- confront(mdata, rules)
+
+print("check for missingness")
+plot(out)
+```
