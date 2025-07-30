@@ -36,7 +36,7 @@ show_text <- TRUE
 
 The table below shows the samples which were sequenced.
 ```{r samplesoverview, echo=FALSE}
-sdata <- read.csv("metadata.txt", header = TRUE, sep = ",") 
+sdata <- read.csv("metadata.txt", header = TRUE, sep = "\t") 
 print(sdata)
 ```
 
