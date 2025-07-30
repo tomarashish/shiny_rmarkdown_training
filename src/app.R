@@ -1,6 +1,7 @@
 library(shiny)
 library(DT)
 library(knitr)
+library(shinydashboard)
 
 ui <- dashboardPage(
   skin = "purple",
